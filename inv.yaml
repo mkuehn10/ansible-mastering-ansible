@@ -1,0 +1,18 @@
+all:
+  children:
+    control:
+      hosts:
+        control: 
+          ansible_connection: local
+    loadbalancer:
+      hosts:
+        lb01:
+    webserver:
+      hosts:
+        app01:
+        app02:
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+    database:
+      hosts:
+        db01:
