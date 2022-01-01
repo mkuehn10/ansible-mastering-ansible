@@ -1,0 +1,35 @@
+---
+# tasks file for demo_app
+  - name: install web components
+    apt:
+      name:
+        - python3-pip
+        - python3-virtualenv
+        - python3-dev
+        - python3-flask
+        - python3-sqlalchemy
+        - python3-mysqldb
+      state: present
+      update_cache: yes
+
+  - name: copy demo app source
+    copy: src=demo/app/ dest=/var/www/demo mode=0755
+    notify: restart apache2
+
+  - name: copy demo.wsgi
+    template: src=demo.wsgi.j2 dest=/var/www/demo/demo.wsgi mode=0755
+    notify: restart apache2
+
+  - name: copy apache virtual host config
+    copy: src=demo/demo.conf dest=/etc/apache2/sites-available mode=0755
+    notify: restart apache2
+
+  - name: install Flask and SQLAlchemy
+    pip:
+      name:
+        - Flask
+        - Flask-SQLAlchemy
+
+  - name: activate demo apache site
+    file: src=/etc/apache2/sites-available/demo.conf dest=/etc/apache2/sites-enabled/demo.conf state=link
+    notify: restart apache2

@@ -1,0 +1,26 @@
+---
+  - name: install tools
+    apt:
+      name:
+        - python3-pip
+        - python3-virtualenv
+        - python3-dev
+        - python3-mysqldb
+      state: present
+      update_cache: yes
+
+  - name: install mysql-server
+    apt: name=mysql-server state=present update_cache=yes
+
+  - name: copy template
+    template: src=my.cnf.j2 dest=/etc/mysql/my.cnf mode=0644
+
+  - name: ensure mysql started
+    service: name=mysql state=started enabled=yes
+
+  - name: create databnase
+    mysql_db: name={{ db_name }} state=present
+
+  - name: create demo user
+    mysql_user: name={{ db_user_name }} password={{ db_user_pass }} priv={{ db_name }}.*:ALL host='{{ db_user_host }}' state=present
+    
