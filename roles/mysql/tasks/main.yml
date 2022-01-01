@@ -16,6 +16,7 @@
   - name: copy template
     template: src=my.cnf.j2 dest=/etc/mysql/my.cnf mode=0644
     tags: [ 'configure' ]
+    notify: restart mysql
 
   - name: ensure mysql started
     service: name=mysql state=started enabled=yes

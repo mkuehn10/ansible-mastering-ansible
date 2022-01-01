@@ -16,6 +16,10 @@
     changed_when: active.stdout_lines | sort | join('') != sites.keys() | sort | join('')
     tags: [ 'configure' ]
 
+  - name: Debug info
+    debug:
+      msg: "{{active.stdout_lines}} + ' ' + {{sites.keys()}}"
+
   - name: deactivate sites
     file: path=/etc/nginx/sites-enabled/{{ item }} state=absent
     with_items: "{{ active.stdout_lines}}"
